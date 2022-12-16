@@ -1,10 +1,10 @@
 ###############################################.
-## ScotPHO - Life expectancy - NHS Board ----
+## ScotPHO - Life expectancy - Council Area ----
 ###############################################.
 
-# Code to create shiny chart of trends in life expectancy and healthy life expectancy by NHS Board 
+# Code to create shiny chart of trends in life expectancy and healthy life expectancy by Council Area 
 # This is published in the following section of the ScotPHO website: 
-# Population Dynamics > Deaths and life expectancy > Data > NHS Boards
+# Population Dynamics > Deaths and life expectancy > Data > Council Area
 
 ############################.
 ## Global ----

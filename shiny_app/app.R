@@ -28,7 +28,7 @@ council_list <- sort(unique(ca_trend$council))
 #Height and widths as percentages to allow responsiveness
 ui <- fluidPage(style="width: 650px; height: 500px; ",
                 div(style= "width:100%",
-                    h4("Chart 2. Life expectancy and healthy life expectancy at birth by Council Area"),
+                    h4("Chart 1. Life expectancy and healthy life expectancy at birth by Council Area"),
                     div(style = "width: 50%; float: left;",
                         selectInput("measure", label = "Select a measure type",
                                     choices = c("Life expectancy", "Healthy life expectancy"), 
@@ -41,7 +41,9 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
                 
                 div(style= "width:100%; float: left;", #Main panel
                     plotlyOutput("chart", width = "100%", height = "350px"),
-                    p("note: y-axis does not start at zero"),
+                    p("Note: y-axis does not start at zero"),
+                    p("2020-2022 Life expectancy estimates are provisional"),
+                    p("Publication of 2020-2022 Healthy life expectancy delayed until 2024"),
                     p(div(style = "width: 25%; float: left;", #Footer
                           HTML("Source: <a href='https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/life-expectancy' target='_blank'>NRS</a>")),
                       div(style = "width: 25%; float: left;",

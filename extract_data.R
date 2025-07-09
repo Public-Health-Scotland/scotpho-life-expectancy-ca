@@ -5,7 +5,7 @@
 # The data is extracted from the SG opendata platform - statistics.gov
 # install.packages("devtools")
 # install the opendata scotland r package which communicates with the statistics.gov wesbite api
-devtools::install_github("datasciencescotland/opendatascot")
+#devtools::install_github("datasciencescotland/opendatascot")
 
 #install phs methods - with new posit workbench requires bespoke installation to ensure phsmethods package can be installed
 #install.packages("gdata", repos = c("https://ppm.publichealthscotland.org/phs-cran/latest"))
@@ -24,7 +24,7 @@ Sys.umask("006")
 shiny_folder <- "/PHI_conf/ScotPHO/1.Analysts_space/Vicky/scotpho-life-expectancy-ca/shiny_app/data/"
 
 # PDATE data file location
-data_folder <- "/PHI_conf/ScotPHO/Website/Topics/Life expectancy/202303_update/"
+data_folder <- "/PHI_conf/ScotPHO/Website/Topics/Life expectancy/202507_update/"
 
 
 # parameters used to filter the opendata
@@ -43,7 +43,7 @@ ods_structure("Life-Expectancy") # see structure and variables of this dataset
 date_range_le <- c("2001-2003", "2002-2004", "2003-2005", "2004-2006", "2005-2007",
                    "2006-2008", "2007-2009", "2008-2010", "2009-2011", "2010-2012",
                    "2011-2013", "2012-2014", "2013-2015", "2014-2016", "2015-2017", 
-                   "2016-2018", "2017-2019", "2018-2020", "2019-2021") # add most recent year
+                   "2016-2018", "2017-2019", "2018-2020", "2019-2021", "2020-2022","2021-2023") # add most recent year
 
 # extract data
 le = ods_dataset("Life-Expectancy", refPeriod = date_range_le, geography= "la",
@@ -65,15 +65,15 @@ le = ods_dataset("Life-Expectancy", refPeriod = date_range_le, geography= "la",
 # https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/life-expectancy/life-expectancy-in-scotland/life-expectancy-in-scotland-2020-2022
 # excel data from fig 5 and fig 6 saved to PHS network folder
 
-library(openxlsx)
-# open le data 
-le_2020to2022_ca <- read.xlsx("/PHI_conf/ScotPHO/Life Expectancy/Data/Source Data/NRS data/2020 to 2022 provisional life expectancy from NRS website.xlsx", sheet = 1) %>%
-  filter(substr(code,1,3) =="S12") %>%
-  select(areaname,year,measure,sex,le) %>%
-  rename(value=le, council=areaname)
-
-# combine stats.gov data with t
-le <- rbind(le, le_2020to2022_ca) %>%   arrange(year, council, sex)
+# library(openxlsx)
+# # open le data 
+# le_2020to2022_ca <- read.xlsx("/PHI_conf/ScotPHO/Life Expectancy/Data/Source Data/NRS data/2020 to 2022 provisional life expectancy from NRS website.xlsx", sheet = 1) %>%
+#   filter(substr(code,1,3) =="S12") %>%
+#   select(areaname,year,measure,sex,le) %>%
+#   rename(value=le, council=areaname)
+# 
+# # combine stats.gov data with t
+# le <- rbind(le, le_2020to2022_ca) %>%   arrange(year, council, sex)
 
 
 ###############################################.

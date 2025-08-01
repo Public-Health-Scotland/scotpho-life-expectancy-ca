@@ -138,7 +138,6 @@ server <- function(input, output) {
       plot
     }    
     
-    
   }) 
   
   

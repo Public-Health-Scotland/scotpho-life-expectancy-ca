@@ -20,7 +20,7 @@ library(shiny) #shiny apps
 ca_trend <- readRDS("data/le_hle_ca.rds")
 
 # Use for selection of areas
-council_list <- sort(unique(ca_trend$council))
+council_list <- sort(unique(ca_trend$areaname))
 
 ############################.
 ## Visual interface ----
@@ -37,15 +37,17 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
                 div(style = "width: 50%; float: left;",
                     selectInput("council", label = "Select Council Area", 
                                 choices = council_list,
-                                selected = "Scotland")),
+                                selected = "Aberdeen City")),
                 
                 div(style= "width:100%; float: left;", #Main panel
+                    (div(title="Show or hide the 95% confidence intervals for the data selected.", # tooltip
+                         checkboxInput("ci_trend", label = "95% confidence intervals", value = FALSE))),
                     plotlyOutput("chart", width = "100%", height = "350px"),
-                    p("Note: y-axis does not start at zero"),
-                    p("2020-2022 Life expectancy estimates are provisional"),
-                    p("Publication of 2020-2022 Healthy life expectancy delayed until 2024"),
+                    h5(uiOutput("axis_note")),
+                    # p("Note: y-axis does not start at zero"),
+                    # p("Latest available healthy life expectancy estimates are 2019-2021, updated figures are expected August 2025"),
                     p(div(style = "width: 25%; float: left;", #Footer
-                          HTML("Source: <a href='https://www.nrscotland.gov.uk/statistics-and-data/statistics/statistics-by-theme/life-expectancy' target='_blank'>NRS</a>")),
+                          HTML("Source: <a href='https://www.nrscotland.gov.uk/statistics-and-data/births-deaths-marriages-and-life-expectancy/#' target='_blank'>NRS</a>")),
                       div(style = "width: 25%; float: left;",
                           downloadLink('download_data', 'Download data')))
                 )
@@ -56,10 +58,20 @@ ui <- fluidPage(style="width: 650px; height: 500px; ",
 ############################.
 server <- function(input, output) {
   
+  # adds a note to highlight that axis does not start at zero for some measures
+  output$axis_note <- renderText({
+    
+    axis_note <- paste0("Note: y-axis does not start at zero <br> ",
+                        "HLE time series produced using ",
+                        tags$a("revised methodology",
+                               href = "https://osr.statisticsauthority.gov.uk/correspondence/alan-ferrier-to-ed-humpherson-temporary-suspension-of-accredited-official-statistics-status-of-national-records-scotlands-healthy-life-expectancy-statistics/", target = "_blank"))
+  })
+  
+  
   output$chart <- renderPlotly({
     
     #Data for Council Area line
-    data_ca <- ca_trend %>% filter(council == input$council & measure == input$measure)
+    data_ca <- ca_trend %>% subset(areaname == input$council & measure == input$measure)
      
     
     # Information to be displayed in tooltip
@@ -115,6 +127,16 @@ server <- function(input, output) {
              legend = list(orientation = "h", x=0, y=1.2)) %>% 
       config(displayModeBar= T, displaylogo = F, editable =F, modeBarButtonsToRemove = bttn_remove) 
     # taking out plotly logo and collaborate button
+    
+    #Adding confidence intervals depending on user input
+    if (input$ci_trend == TRUE) {
+      plot %>% 
+        add_ribbons(data = data_ca, ymin = ~lci, ymax = ~uci, showlegend = F,
+                    opacity = 0.2) 
+      
+    } else if (input$ci_trend == FALSE) {
+      plot
+    }    
     
   }) 
   
